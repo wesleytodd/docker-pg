@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+if [ $(docker inspect --format "{{json .State.Health.Status }}" "$1") != "\"healthy\"" ]
+  then
+    exit 1
+fi
+exit 0

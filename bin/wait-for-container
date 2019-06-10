@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+while [ $(docker inspect --format "{{json .State.Health.Status }}" "$1") != "\"healthy\"" ]; do printf "."; sleep 1; done; printf " \\e[32mready\\n";

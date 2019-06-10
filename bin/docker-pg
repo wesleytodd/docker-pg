@@ -1,0 +1,49 @@
+#!/usr/bin/env node
+
+const yargs = require('yargs')
+const cli = yargs()
+  .option('env', {
+    alias: 'e',
+    describe: 'Load an env file',
+    type: 'string'
+  })
+  .option('name', {
+    alias: 'n',
+    describe: 'Service name for the container',
+    type: 'string'
+  })
+  .option('port', {
+    alias: 'p',
+    describe: 'The port to expose postgres on',
+    type: 'number'
+  })
+  .option('user', {
+    alias: 'u',
+    describe: 'Postgres User',
+    type: 'string'
+  })
+  .option('password', {
+    alias: 'p',
+    describe: 'Postgres Passord',
+    type: 'string'
+  })
+  .option('database', {
+    alias: 'd',
+    describe: 'Postgres Database',
+    type: 'string'
+  })
+  .parse(process.argv.slice(2))
+
+if (cli.env || cli.env === '') {
+  require('dotenv').config({ path: cli.env || '.env' })
+}
+
+(async () => {
+  await require('..')({
+    serviceName: cli.name || 'docker-pg',
+    hostPort: cli.port || process.env.POSTGRES_PORT || 5432,
+    user: cli.user || process.env.POSTGRES_USER,
+    password: cli.password || process.env.POSTGRES_PASSWORD,
+    database: cli.database || process.env.POSTGRES_DATABASE
+  })
+})()
